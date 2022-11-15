@@ -219,3 +219,44 @@ Client 는 사용자를 대신해서 사용자가 속한 `Resource server`에게
 - refresh_token (필수)
 - client_id (필수)
 - client_secret (필수)
+
+## Open ID Connect
+
+- Open ID Connect 는 OAuth 2.0 프로토콜 위에 구축된 ID 계층
+  - OAuth 2.0 최상위 레이어에 위치 - 인증
+  - OAuth 2.0은 사실 Authorization Framework - 인증도 가능하지만 사실 인가 프레임워크
+  - 그렇기에 OAuth 2.0의 목적은 Access token 을 얻는 것 
+  - 그래서 인증만을 위한 프로토콜을 만든게 Open ID Connect
+- OAuth 2.0 을 확장하여 인증방식을 표준화한 OAuth 2.0 기반의 `인증 프로토콜`
+- scope 지정 시 openid 를 포함하면 open id connect 사용이 가능
+  - 인증에 대한 정보는 ID Token 이라는 JWT 로 반환
+- Open ID Connect 는 클라이언트가 `사용자 ID 를 확인할 수 있게하는 보안 토큰(ID TOKEN)`
+
+### ID Token
+
+ID 토큰은 사용자가 인증되었음을 증명하는 결과물이다. 반면 Access Token 은 인증을 나타내지 않는다.
+따라서, `OpenID Connect(OIDC)` 요청 시, access token 과 함께 ID 토큰이 전달된다.
+어플리케이션은 공개 키로 ID 토큰을 검증 및 유효성을 검사하고 만료 여부 등의 `Claim`을 확인한다.
+어플리케이션에서는 클레임 정보에 포함된 여러 정보들을 활용해 인증관리를 사용할 수 있다.
+
+- ID Token vs Access Token
+  - ID 토큰은 API 요청에 사용되지 않으며, 신원확인을 위한 용도로만 사용되어야 한다
+    - 즉, 로그인 용도
+  - Access Token 은 인증을 위해 사용되지 않으며, 리소스에 접근하기 위한 용도로 사용되어야 한다
+    - 즉 자원을 가져오는 용도
+
+### 용어
+
+- OIDC 상호 작용 행위자
+  - OpenID Provider(OP)
+    - Open ID 제공자로, 최종 사용자를 인증하고 인증 결과와 사용자 정보를 제공하는 OAuth 2.0 서버
+  - Relying Party(RP)
+    - 신뢰 당사자, 인증 요청을 처리하기위해 OP 에 의존하는 어플리케이션
+
+### 흐름
+
+1. RP는 OP에 권한 부여 요청을 보냄
+2. OP는 최종 사용자(Resource Owner)를 인증하고 권한을 획득
+3. OP는 ID 토큰과 액세스 토큰을 반환
+4. RP는 액세스 토큰을 사용해 UserInfo 엔드포인트에 요청을 보낼 수 있음
+5. UserInfo 엔드포인트는 최종 사용자에 대한 클레임을 반환
