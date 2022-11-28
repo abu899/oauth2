@@ -68,21 +68,21 @@ issuer-uri 프로퍼티를 사용하려면 인가 서버가 지원하는 엔드 
 6. Authentication 객체를 생성하고 JWT 객체를 principal 속성에 저장
 7. Authentication을 SecurityContext에 저장하고 인증을 완료
 
-### JCA(Java Cryptography Architecture) & JCE(Java Cryptography Extension)
+## JCA(Java Cryptography Architecture) & JCE(Java Cryptography Extension)
 
 자바는 JCA & JCE 프레임워크를 통해 자체적인 보안관련 기능을 제공
 - 전자서명, 메시지 다이제스트, 인증서와 인증서 유효성 검사, 키 생성 및 관리 등을 제공
 - JCA & JCE 프레임워크는 `프로바이더 보안 구조`를 사용, 보안과 관련한 다양한 API 제공
   - java.security.Provider 클래스의 구현체
 
-#### Message Digest
+### Message Digest
 
 원본파일이 변조되었는지 아닌지에 대한 `무결성 검사`
 
 - 입력값으로 전달된 다양한 길이의 원본값을 `고정 길이 해시 값`으로 출력
 - `단방향 암호화`이기에 해시 값에서 다시 원본값으로 복호화 할 수 없다 
 
-#### Signature
+### Signature
 
 <p align="center"><img src="img/signature.png" width="80%"></p>
 
@@ -96,7 +96,7 @@ issuer-uri 프로퍼티를 사용하려면 인가 서버가 지원하는 엔드 
   Signature Byte 와 비교(`verify()`)한다
 - 서명은 메시지 다이제스트와 비대칭키 암호화가 결합한 형태
 
-#### Symmetric Key Algorithm(대칭키 암호)
+### Symmetric Key Algorithm(대칭키 암호)
 
 <p align="center"><img src="img/sym.png" width="80%"></p>
 
@@ -110,7 +110,7 @@ issuer-uri 프로퍼티를 사용하려면 인가 서버가 지원하는 엔드 
   - 암호화 해시 함수(MD5, SHA256 등)를  기반으로 하는 MAC이 `HMAC`
     - HMAC 은 메시지 다이제스트와 비밀 키의 조합
 
-#### Asymmetric Key Algorithm(비대칭키 암호)
+### Asymmetric Key Algorithm(비대칭키 암호)
 
 <p align="center"><img src="img/asym.png" width="80%"></p>
 
@@ -126,9 +126,9 @@ issuer-uri 프로퍼티를 사용하려면 인가 서버가 지원하는 엔드 
 - RSA
   - 현재 SSL/TLS에 가장 많이 사용되는 공개키 암호화 알고리즘
   
-### JCA 와 JCE 구조
+## JCA 와 JCE 구조
 
-#### Cipher
+### Cipher
 
 - 암호화 및 복호화에 사용되는 암호화 암호의 기능 제공
   - 즉, 키를 통해 일반 텍스트를 암호화 하거나, 암호화된 데이터를 키를 통해 일반 텍스트로 복호화 하는 과정
@@ -141,7 +141,53 @@ issuer-uri 프로퍼티를 사용하려면 인가 서버가 지원하는 엔드 
     - ENCRYPT_MODE
     - DECRYPT_MODE
 
-#### Key
+### Key
 
 `Key`는 JCA가 지원하는 모든 종류의 키에 대한 최상위 인터페이스이다.
 PublicKey, PrivateKey, SecretKey(대칭키)가 존재한다.
+
+## JWT & JWK
+
+### JOSE(JSON Object Signing and Encryption)
+
+<p align="center"><img src="img/jose.png" width="80%"></p>
+
+- JSON 데이터의 컨텐츠를 암호화하고 서명의 형태로 나타내기 위해 IETF에서 표준화한 소프트웨어 기술셋
+- 다음 사양이 포함되어 있음
+  - JWT(JSON Web Token)
+    - 클레임 기반 보안 값을 나타내는 방법
+    - 인증, 권한 부여 및 정보 교환에 사용
+    - JWS 또는 JWE 방식으로 구현된다
+  - JWS(JSON Web Signature)
+    - 디지털 서명 또는 MAC으로 보안된 콘텐츠를 표현하는 방법
+    - 대부분 이 방식으로 표현
+  - JWE(JSON Web Encryption)
+    - 의도한 수신자만 읽을 수 있도록 암호화된 토큰을 나타내는 형식
+  - JWK(JSON Web Key)
+    - HMAC 이나 RSA 알고리즘을 사용해 공개 키 세트를 JSON 객체로 나타내는 구조
+  - JWA(JSON Web Algorithm)
+    - JWS, JWK 및 JWE에 필요한 알고리즘 목록
+    - 어떤 알고리즘으로 서명할 것이냐
+
+### JWS
+
+<p align="center"><img src="img/JWS.png" width="80%"></p>
+
+- JOSE Header
+  - 일반적으로 JWT인 토큰 유형과 HMAC SHA256 또는 RSA 같은 서명 알고리즘의 두 부분으로 구성
+  - `Base64Url`로 인코딩 되어 `JWT의 첫 부분을 형성`
+- Payload(JWT Claim set)
+  - 토큰에 포함될 내용인 클레임을 포함하는 페이로드
+  - 표준 필드인 7개의 등록 클레임 이름 및 사용자 지정 클레임 등으로 구성
+  - `Base64Url`로 인코딩 되어 `JWT의 두 번째 부분을 형성`
+- Signature
+  - Base64Url 인코딩 되어 헤더와 페이로드를 인코딩하고 이 둘을 `.`으로 구분하여 연결
+
+### JWK
+
+- 암호화 키를 저장하는 방식
+- 인가서버에서 발행하는 JWT 토큰의 암호화 및 서명에 필요한 암호화 키의 다양한 정보를 담은 JSON 객체 표준
+- JwkSetUri 정보를 설정하게 되면 인가서버로부터 JWK 형태의 정보를 다운로드 할 수 있고 JWT를 검증할 수 있다
+- JWK 확장
+  - 자바 표준 보안 클래스를 사용해 대칭, 비대칭 키 방식의 JWT의 암호화 및 전자서명 그리고 이후 검증을 위한 키 생성, 변환을 지원
+  - 구현체로서 RSAKey, OctetSequenceKey, OctetKeyPair 가 존재
