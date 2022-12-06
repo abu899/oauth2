@@ -32,9 +32,9 @@ import study.resourceserver.filter.authorization.JwtAuthorizationRsaFilter;
 import study.resourceserver.signature.MacSecuritySigner;
 import study.resourceserver.signature.RsaSecuritySigner;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity
+//@EnableWebSecurity
 public class OAuth2ResourceServerConfig {
 
     private final OAuth2ResourceServerProperties properties;
