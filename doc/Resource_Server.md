@@ -2,10 +2,6 @@
 
 <p align="center"><img src="img/spring_oauth.png" width="80%"></p>
 
-## OAuth 2.0 Client
-
-현재 필요한 내용은 서버 구현과 관련된 내용이므로 Resource Server 와 Authorization Server 먼저 학습 후 작성
-
 ## OAuth 2.0 Resource Server
 
 - 클라이언트 및 인가서버와의 통신을 담당하는 리소스 서버의 기능을 필터 기반 모듈로 구현
@@ -191,3 +187,9 @@ PublicKey, PrivateKey, SecretKey(대칭키)가 존재한다.
 - JWK 확장
   - 자바 표준 보안 클래스를 사용해 대칭, 비대칭 키 방식의 JWT의 암호화 및 전자서명 그리고 이후 검증을 위한 키 생성, 변환을 지원
   - 구현체로서 RSAKey, OctetSequenceKey, OctetKeyPair 가 존재
+
+### Opaque Token
+
+JWT 포맷으로 된 액세스 토큰은 키만 있으면 인가서버로 가서 검증을 받을 필요가 없지만, `Opaque 토큰`은 
+원격(엔드포인트)으로 검증을 처리하는 방식이다. 즉, Bearer token 은 `리소스 서버에서 처리하는 자체검증`,
+Opaque token 은 `인가서버 에서 처리하는 원격 검증`이다.
